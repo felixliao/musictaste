@@ -33,6 +33,7 @@ export default NextAuth({
   secret: process.env.JWT_SECRET,
   callbacks: {
     jwt: async ({ token, account, user }) => {
+      console.log('gg', account, user, token, Date.now());
       if (account && user) {
         return {
           ...token,

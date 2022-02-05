@@ -3,4 +3,5 @@ export interface Song {
   artist: string
   album: string
   src: string
+  score?: number
 }

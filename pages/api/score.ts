@@ -35,7 +35,7 @@ async function getCommentCount(id: number): Promise<number> {
   return -1
 }
 type Data = {
-  count: number
+  score: number
 }
 
 export default async function handler(
@@ -44,14 +44,14 @@ export default async function handler(
 ) {
   const { keyword } = req.query
   if (!keyword) {
-    res.status(400).json({ count: -1 })
+    res.status(400).json({ score: -1 })
   }
   const id = await searchSong(keyword as string)
   if (id === -1) {
-    res.status(404).json({ count: -1 })
+    res.status(404).json({ score: -1 })
   }
-  const count = await getCommentCount(id)
+  const score = await getCommentCount(id)
   res.json({
-    count,
+    score,
   })
 }

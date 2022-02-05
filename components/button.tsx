@@ -3,10 +3,11 @@ import React from 'react'
 interface Props {
   text: string
   onClick?: () => void
+  className?: string
 }
-const Button = ({ text, onClick }: Props) => (
+const Button = ({ text, onClick, className }: Props) => (
   <button
-    className="mt-5 rounded-full bg-spotify-green px-10 py-3 text-white"
+    className={`mt-5 rounded-full bg-spotify-green px-10 py-3 text-white ${className}`}
     onClick={onClick}
   >
     {text}
