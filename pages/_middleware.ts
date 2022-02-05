@@ -2,7 +2,10 @@ import { getToken } from 'next-auth/jwt'
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
 
 export async function middleware(req: NextRequest, ev: NextFetchEvent) {
-  const token = await getToken({ req, secret: process.env.JWT_SECRET })
+  const token = await getToken({
+    req: req as any,
+    secret: process.env.JWT_SECRET,
+  })
   const { pathname } = req.nextUrl
 
   if (pathname.includes('api/auth') || token) {
@@ -15,4 +18,3 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
     return NextResponse.rewrite(url)
   }
 }
-

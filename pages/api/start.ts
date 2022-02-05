@@ -5,18 +5,21 @@ import { getToken } from 'next-auth/jwt'
 import { getSession } from 'next-auth/react'
 
 type Data = {
+  src: string
+  album: string
+  artist: string
   name: string
 }
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Data[]>
 ) {
   const { list, range } = req.query
   const session = await getSession({ req })
   const {
     user: { accessToken, refreshToken },
-  } = session
+  } = session as any
   console.log(session)
   spotifyApi.setAccessToken(accessToken)
   spotifyApi.setRefreshToken(refreshToken)

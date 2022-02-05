@@ -5,8 +5,8 @@ import SpotifyProvider from 'next-auth/providers/spotify'
 
 const refreshAccessToken = async (token: JWT) => {
   try {
-    spotifyApi.setAccessToken(token.accessToken)
-    spotifyApi.setRefreshToken(token.refreshToken)
+    spotifyApi.setAccessToken(token.accessToken as string)
+    spotifyApi.setRefreshToken(token.refreshToken as string)
     const { body } = await spotifyApi.refreshAccessToken()
     return {
       ...token,
@@ -43,16 +43,18 @@ export default NextAuth({
         }
       }
 
-      if (Date.now() < token.accessTokenExpires) {
+      if (Date.now() < (token.accessTokenExpires as number)) {
         return token
       }
 
       return await refreshAccessToken(token)
     },
     session: async ({ session, token }) => {
-      session.user.accessToken = token.accessToken
-      session.user.refreshToken = token.accessToken
-      session.user.username = token.username
+      if (!session.user) return session
+      const { user } = session as any
+      user.accessToken = token.accessToken
+      user.refreshToken = token.accessToken
+      user.username = token.username
       return session
     },
   },
