@@ -6,13 +6,21 @@
     "start": "next start"
   },
   "dependencies": {
+    "NeteaseCloudMusicApi": "^4.5.3",
+    "axios": "^0.25.0",
+    "mongodb": "^4.3.1",
     "next": "latest",
+    "next-auth": "^4.2.1",
+    "qs": "^6.10.3",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "spotify-web-api-node": "^5.0.2"
   },
   "devDependencies": {
     "@types/node": "17.0.4",
+    "@types/qs": "^6.9.7",
     "@types/react": "17.0.38",
+    "@types/spotify-web-api-node": "^5.0.7",
     "autoprefixer": "^10.4.0",
     "postcss": "^8.4.5",
     "prettier": "^2.5.1",
