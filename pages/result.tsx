@@ -72,9 +72,9 @@ const Result = (props: Props) => {
   }
   const addScore = async (score: number, idx: number) => {
     setSongList(songList =>
-      songList
+      songList!
         .slice(0, idx)
-        .concat({ ...songList[idx], score }, songList.slice(idx + 1))
+        .concat({ ...songList![idx], score }, songList!.slice(idx + 1))
     )
   }
   return (
