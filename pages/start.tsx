@@ -78,7 +78,7 @@ const Start = () => {
       )}
       <Button
         className="mt-auto mb-6"
-        text="Start"
+        text="Calculate"
         onClick={() => {
           fetch('/api/start')
           router.push(`/result?list=${list}&range=${range}`)

@@ -48,7 +48,7 @@ export default async function handler(
   }
   const id = await searchSong(keyword as string)
   if (id === -1) {
-    res.status(404).json({ score: -1 })
+    res.json({ score: 0 })
   }
   const score = await getCommentCount(id)
   res.json({

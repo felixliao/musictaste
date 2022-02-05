@@ -7,7 +7,7 @@ interface Props {
 }
 const Button = ({ text, onClick, className }: Props) => (
   <button
-    className={`mt-5 rounded-full bg-spotify-green px-10 py-3 text-white ${className}`}
+    className={`rounded-full bg-spotify-green px-10 py-3 text-white ${className}`}
     onClick={onClick}
   >
     {text}

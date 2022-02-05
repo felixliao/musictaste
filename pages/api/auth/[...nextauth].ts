@@ -7,6 +7,8 @@ const refreshAccessToken = async (token: JWT) => {
   try {
     spotifyApi.setAccessToken(token.accessToken as string)
     spotifyApi.setRefreshToken(token.refreshToken as string)
+    spotifyApi.setClientId(process.env.SPOTIFY_CLIENT_ID!)
+    spotifyApi.setClientSecret(process.env.SPOTIFY_CLIENT_SECRET!)
     const { body } = await spotifyApi.refreshAccessToken()
     return {
       ...token,
@@ -33,7 +35,6 @@ export default NextAuth({
   secret: process.env.JWT_SECRET,
   callbacks: {
     jwt: async ({ token, account, user }) => {
-      console.log('gg', account, user, token, Date.now());
       if (account && user) {
         return {
           ...token,
@@ -47,7 +48,6 @@ export default NextAuth({
       if (Date.now() < (token.accessTokenExpires as number)) {
         return token
       }
-
       return await refreshAccessToken(token)
     },
     session: async ({ session, token }) => {

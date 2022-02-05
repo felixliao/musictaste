@@ -11,7 +11,7 @@ interface Props {
 }
 
 const Result = (props: Props) => {
-  const [songList, setSongList] = useState<Song[]>([])
+  const [songList, setSongList] = useState<Song[]>()
   const [score, setScore] = useState<number | null>(null)
   const router = useRouter()
   const { query } = router
@@ -20,7 +20,7 @@ const Result = (props: Props) => {
   const { user } = data ?? {}
   const { accessToken } = user ?? ({} as any)
   useEffect(() => {
-    if (list && range && accessToken) load()
+    if (list && accessToken) load()
     else router.push('/')
   }, [])
   const load = useCallback(async () => {
@@ -47,7 +47,7 @@ const Result = (props: Props) => {
             count: 0,
           }
         )
-      setScore(sum / count)
+      setScore(Math.round(sum / count))
     },
     [songList]
   )
@@ -79,36 +79,56 @@ const Result = (props: Props) => {
   }
   return (
     <div className="mx-2 mt-4">
-      <div className="mb-8">
+      <div className="mb-6">
         <h1 className="mb-3 text-5xl">Your Results</h1>
-        {score && <h2 className="text-3xl">Final Score: {score}</h2>}
+        <p className="mb-2 text-xl opacity-60">
+          Parameters:{' '}
+          {list === 'top'
+            ? `Top Songs, ${
+                range === 'short_term'
+                  ? 'Last Month'
+                  : range === 'medium_term'
+                  ? 'Last 6 Months'
+                  : 'All'
+              }`
+            : 'Liked Songs'}
+        </p>
+        {score && (
+          <h2 className="text-3xl">
+            Final Score: <span className="text-spotify-green">{score}</span>
+          </h2>
+        )}
       </div>
-      {songList.map(item => (
-        <div className="my-3 flex" key={item.name}>
-          <Image src={item.src} alt={item.name} width={75} height={75} />
-          <div className="ml-3 flex flex-col justify-center">
-            <h3 className="w-48 overflow-hidden text-ellipsis whitespace-nowrap text-xl">
-              {item.name}
-            </h3>
-            <p className="w-48 overflow-hidden text-ellipsis whitespace-nowrap opacity-80">
-              {item.artist}
-            </p>
-            <p className="w-48 overflow-hidden text-ellipsis whitespace-nowrap text-sm opacity-60">
-              {item.album}
-            </p>
+      {songList ? (
+        songList.map(item => (
+          <div className="my-3 flex" key={item.name}>
+            <Image src={item.src} alt={item.name} width={75} height={75} />
+            <div className="ml-3 flex flex-col justify-center">
+              <h3 className="w-48 overflow-hidden text-ellipsis whitespace-nowrap text-xl">
+                {item.name}
+              </h3>
+              <p className="w-48 overflow-hidden text-ellipsis whitespace-nowrap opacity-80">
+                {item.artist}
+              </p>
+              <p className="w-48 overflow-hidden text-ellipsis whitespace-nowrap text-sm opacity-60">
+                {item.album}
+              </p>
+            </div>
+            <div className="ml-auto mr-3 flex flex-col items-end justify-center">
+              <p className="opacity-60">score</p>
+              <p className="text-xl">
+                {item.score === undefined
+                  ? 'loading'
+                  : item.score === -1
+                  ? 'failed'
+                  : item.score}
+              </p>
+            </div>
           </div>
-          <div className="ml-auto mr-3 flex flex-col items-end justify-center">
-            <p className="opacity-60">score</p>
-            <p className="text-xl">
-              {item.score === undefined
-                ? 'loading'
-                : item.score === -1
-                ? 'failed'
-                : item.score}
-            </p>
-          </div>
-        </div>
-      ))}
+        ))
+      ) : (
+        <h1 className="text-4xl">Loading...</h1>
+      )}
     </div>
   )
 }
