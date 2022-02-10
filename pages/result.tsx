@@ -7,12 +7,12 @@ import { Song } from 'types'
 import { useRouter } from 'next/router'
 
 interface Props {
-  list: Song[]
+  serverSongList: Song[]
 }
 
-const Result = (props: Props) => {
-  const [songList, setSongList] = useState<Song[]>()
-  const [score, setScore] = useState<number | null>(null)
+const Result = ({ serverSongList }: Props) => {
+  const [songList, setSongList] = useState<Song[]>(serverSongList)
+  const [score, setScore] = useState<number>()
   const router = useRouter()
   const { query } = router
   const { list, range } = query
@@ -20,18 +20,23 @@ const Result = (props: Props) => {
   const { user } = data ?? {}
   const { accessToken } = user ?? ({} as any)
   useEffect(() => {
-    if (list && accessToken) load()
+    if (serverSongList || (list && accessToken)) load()
     else router.push('/')
   }, [])
   const load = useCallback(async () => {
-    const res = await getList(list as string, range as string, accessToken)
-    setSongList(res)
+    let res
+    if (serverSongList) {
+      res = songList
+    } else {
+      res = await getList(list as string, range as string, accessToken)
+      setSongList(res)
+    }
 
     setFinalScore(await Promise.all(res.map((song, i) => getScore(song, i))))
   }, [list, range, accessToken])
   const setFinalScore = useCallback(
     (list: number[]) => {
-      const { sum, count } = list
+      let { sum, count } = list
         .filter(s => s >= 0)
         .reduce(
           ({ sum, count }, score) => {
@@ -47,7 +52,7 @@ const Result = (props: Props) => {
             count: 0,
           }
         )
-      setScore(Math.round(sum / count))
+      setScore(Math.round(1000 - Math.min(sum / count, 1000)) / 10)
     },
     [songList]
   )
@@ -79,7 +84,7 @@ const Result = (props: Props) => {
   }
   return (
     <div className="mx-2 mt-4">
-      <div className="mb-6">
+      <div className="mb-5">
         <h1 className="mb-3 text-5xl">Your Results</h1>
         <p className="mb-2 text-xl opacity-60">
           Parameters:{' '}
@@ -93,16 +98,21 @@ const Result = (props: Props) => {
               }`
             : 'Liked Songs'}
         </p>
-        {score && (
-          <h2 className="text-3xl">
-            Final Score: <span className="text-spotify-green">{score}</span>
+        {score !== undefined && (
+          <h2 className="text-4xl">
+            Final Score: <span className="text-spotify-green text-6xl">{score}</span><span className="opacity-40 text-sm">/100</span>
           </h2>
         )}
       </div>
       {songList ? (
         songList.map(item => (
           <div className="my-3 flex" key={item.name}>
-            <Image src={item.src} alt={item.name} width={75} height={75} />
+            <Image
+              src={item.src}
+              alt={item.name}
+              width={75}
+              height={75}
+            />
             <div className="ml-3 flex flex-col justify-center">
               <h3 className="w-48 overflow-hidden text-ellipsis whitespace-nowrap text-xl">
                 {item.name}
@@ -115,7 +125,7 @@ const Result = (props: Props) => {
               </p>
             </div>
             <div className="ml-auto mr-3 flex flex-col items-end justify-center">
-              <p className="opacity-60">score</p>
+              <p className="opacity-60">comments</p>
               <p className="text-xl">
                 {item.score === undefined
                   ? 'loading'
@@ -131,6 +141,20 @@ const Result = (props: Props) => {
       )}
     </div>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  const { query, req } = ctx
+  const session = await getSession({ req })
+  const { user } = session ?? {}
+  const { accessToken } = user ?? ({} as any)
+  const { list, range } = query
+  const res = await getList(list as string, range as string, accessToken)
+  return {
+    props: {
+      serverSongList: res,
+    },
+  }
 }
 
 export default Result

@@ -9,8 +9,8 @@ const LOGIN_URL = `https://accounts.spotify.com/authorize?${qs.stringify({
 
 // credentials are optional
 const spotifyApi = new SpotifyWebApi({
-  // clientId: process.env.SPOTIFY_CLIENT_ID,
-  // clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   // redirectUri: 'http://www.example.com/callback',
 })
 

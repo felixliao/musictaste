@@ -76,14 +76,12 @@ const Start = () => {
           </div>
         </>
       )}
-      <Button
-        className="mt-auto mb-6"
-        text="Calculate"
-        onClick={() => {
-          fetch('/api/start')
-          router.push(`/result?list=${list}&range=${range}`)
-        }}
-      />
+      <Link href={`/result?list=${list}&range=${range}`} passHref>
+        <Button
+          className="mt-auto mb-6"
+          text="Calculate"
+        />
+      </Link>
     </div>
   )
 }
