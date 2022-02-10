@@ -80,6 +80,7 @@ const Start = () => {
         <Button
           className="mt-auto mb-6"
           text="Calculate"
+          canLoad
         />
       </Link>
     </div>
