@@ -17,7 +17,6 @@ interface Props {
 }
 
 const Result = ({ songList, score }: Props) => {
-  const { data } = useSession()
   const [profile, setProfile] = useState<any>()
   const router = useRouter()
   const { query } = router
@@ -29,14 +28,17 @@ const Result = ({ songList, score }: Props) => {
       list,
       range,
       time: start ? Date.now() - start : 0,
+      score,
     })
   })
   const onShare = async () => {
+    let time = Date.now()
     const me = profile ?? (await fetch('/api/me').then(res => res.json()))
     setProfile(me)
     poster ??
       setPoster(await createImage({ _songList: songList, user: me, score }))
     setModalVisible(true)
+    window.gtag('event', 'share', { time: Date.now() - time, score })
   }
   if (score === -1) {
     return (
