@@ -5,4 +5,5 @@
 body {
   background: black;
   color: white;
+  padding-bottom: env(safe-area-inset-bottom);
 }
