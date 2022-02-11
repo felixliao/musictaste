@@ -1,5 +1,5 @@
 import { getList } from 'lib/spotify'
-import { getSession } from 'next-auth/react'
+import { getSession, useSession } from 'next-auth/react'
 import { GetServerSideProps } from 'next/types'
 import Image from 'next/image'
 import { Song } from 'types'
@@ -7,8 +7,9 @@ import { useRouter } from 'next/router'
 import getCount from 'lib/netease'
 import Link from 'next/link'
 import Button from 'components/button'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { start } from './start'
+import createImage from 'lib/poster'
 
 interface Props {
   songList: Song[]
@@ -16,12 +17,27 @@ interface Props {
 }
 
 const Result = ({ songList, score }: Props) => {
+  const { data } = useSession()
+  const [profile, setProfile] = useState<any>()
   const router = useRouter()
   const { query } = router
   const { list, range } = query
+  const [modalVisible, setModalVisible] = useState(false)
+  const [poster, setPoster] = useState<string>()
   useEffect(() => {
-    window.gtag('event', 'success', { list, range, time: start ? Date.now() - start : 0})
+    window.gtag('event', 'success', {
+      list,
+      range,
+      time: start ? Date.now() - start : 0,
+    })
   })
+  const onShare = async () => {
+    const me = profile ?? (await fetch('/api/me').then(res => res.json()))
+    setProfile(me)
+    poster ??
+      setPoster(await createImage({ _songList: songList, user: me, score }))
+    setModalVisible(true)
+  }
   if (score === -1) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
@@ -88,6 +104,23 @@ const Result = ({ songList, score }: Props) => {
       ) : (
         <h1 className="text-4xl">Loading...</h1>
       )}
+      {!modalVisible && (
+        <Button
+          className="fixed bottom-8 mx-auto left-0 right-0"
+          text="Share"
+          onClick={onShare}
+          canLoad
+        />
+      )}
+      {modalVisible && poster && (
+        <div className="fixed top-0 left-0 w-screen h-screen bg-black/70 z-10">
+          <div className="flex flex-col justify-center items-center  w-4/5 absolute m-auto left-0 top-0 right-0 bottom-0 mt-6">
+            <img className="w-full h-auto" src={poster} alt="poster" />
+            <p className="text-lg my-3">Long press to download</p>
+            <Button text="Close" onClick={() => setModalVisible(false)} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -98,12 +131,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   const { user } = session ?? {}
   const { accessToken } = user ?? ({} as any)
   const { list, range } = query
-  const songList = await getList(
-    list as string,
-    range as string,
-    accessToken,
-    50
-  )
+  const songList = await getList(list as string, range as string, accessToken)
 
   const computedSongList = await Promise.all(
     songList.map(async song => ({
