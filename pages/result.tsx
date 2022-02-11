@@ -30,7 +30,7 @@ const Result = ({ songList, score }: Props) => {
       time: start ? Date.now() - start : 0,
       score,
     })
-  })
+  }, [])
   const onShare = async () => {
     let time = Date.now()
     const me = profile ?? (await fetch('/api/me').then(res => res.json()))
