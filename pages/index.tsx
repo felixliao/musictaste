@@ -1,14 +1,12 @@
 import Button from 'components/button'
 import { NextPageContext } from 'next'
 import { useSession, signIn, signOut, getSession } from 'next-auth/react'
-import Head from 'next/head'
 import Link from 'next/link'
 
 export default function Home() {
   const session = useSession()
   return (
     <div className="flex min-h-screen flex-col items-center justify-center py-2 px-2">
-
       <h1 className="text-center text-2xl">Netease Music Taste Calculator</h1>
       <p className="mt-5 text-center text-sm opacity-60">
         Assess your music taste by the comment counts on Netease Music. The
@@ -35,7 +33,7 @@ export default function Home() {
         <Button
           className="mt-5"
           text="Login with Spotify"
-          onClick={() => signIn('spotify')}
+          onClick={() => signIn('spotify', { callbackUrl: '/start' })}
         />
       )}
     </div>

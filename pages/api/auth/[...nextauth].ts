@@ -33,6 +33,9 @@ export default NextAuth({
     }),
   ],
   secret: process.env.JWT_SECRET,
+  pages: {
+    signIn: '/'
+  },
   callbacks: {
     jwt: async ({ token, account, user }) => {
       if (account && user) {

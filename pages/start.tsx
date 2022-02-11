@@ -1,7 +1,5 @@
 import Button from 'components/button'
-import Select from 'components/select'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
 const initState = {
@@ -36,7 +34,6 @@ const options = {
   ],
 }
 const Start = () => {
-  const router = useRouter()
   const [form, setForm] = useState(initState)
   const { list, range } = form
   return (

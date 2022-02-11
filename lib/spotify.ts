@@ -18,13 +18,13 @@ export default spotifyApi
 
 export { LOGIN_URL }
 
-export async function getList(list: string, range: string, token: string) {
+export async function getList(list: string, range: string, token: string, count: number = 20) {
   spotifyApi.setAccessToken(token)
 
   if (list === 'top') {
     const result = await spotifyApi.getMyTopTracks({
       time_range: range as any,
-      limit: 20,
+      limit: count,
     })
     return result.body.items.map(item => ({
       src: item.album.images[0].url,
