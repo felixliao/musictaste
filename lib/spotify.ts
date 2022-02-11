@@ -1,7 +1,7 @@
 import SpotifyWebApi from 'spotify-web-api-node'
 import qs from 'qs'
 
-const scopes = ['user-read-email', 'user-library-read', 'user-top-read']
+const scopes = ['user-library-read', 'user-top-read']
 
 const LOGIN_URL = `https://accounts.spotify.com/authorize?${qs.stringify({
   scope: scopes.join(' '),
