@@ -7,6 +7,8 @@ const initState = {
   range: 'short_term',
 }
 
+let start: number
+
 const options = {
   list: [
     {
@@ -78,10 +80,19 @@ const Start = () => {
           className="mt-auto mb-6"
           text="Calculate"
           canLoad
+          onClick={() => {
+            start = Date.now()
+            window.gtag('event', 'start', {
+              list,
+              range,
+            })
+          }}
         />
       </Link>
     </div>
   )
 }
+
+export { start }
 
 export default Start

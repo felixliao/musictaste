@@ -7,6 +7,8 @@ import { useRouter } from 'next/router'
 import getCount from 'lib/netease'
 import Link from 'next/link'
 import Button from 'components/button'
+import { useEffect } from 'react'
+import { start } from './start'
 
 interface Props {
   songList: Song[]
@@ -17,6 +19,9 @@ const Result = ({ songList, score }: Props) => {
   const router = useRouter()
   const { query } = router
   const { list, range } = query
+  useEffect(() => {
+    window.gtag('event', 'success', { list, range, time: start ? Date.now() - start : 0})
+  })
   if (score === -1) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
@@ -93,7 +98,12 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   const { user } = session ?? {}
   const { accessToken } = user ?? ({} as any)
   const { list, range } = query
-  const songList = await getList(list as string, range as string, accessToken, 50)
+  const songList = await getList(
+    list as string,
+    range as string,
+    accessToken,
+    50
+  )
 
   const computedSongList = await Promise.all(
     songList.map(async song => ({
