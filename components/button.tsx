@@ -19,7 +19,7 @@ const Button = React.forwardRef(
     )
     return (
       <button
-        className={`rounded-full bg-spotify-green px-10 py-3 text-white ${className}`}
+        className={`text-center rounded-full w-32 bg-spotify-green py-3 text-white ${className}`}
         onClick={handleClick}
       >
         {canLoad && clicked ? 'computing' : text}
