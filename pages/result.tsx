@@ -81,13 +81,13 @@ const Result = ({ songList, score }: Props) => {
           <div className="my-3 flex" key={item.name}>
             <Image src={item.src} alt={item.name} width={75} height={75} />
             <div className="ml-3 flex flex-col justify-center">
-              <h3 className="w-48 overflow-hidden text-ellipsis whitespace-nowrap text-xl">
+              <h3 className="w-44 overflow-hidden text-ellipsis whitespace-nowrap text-xl">
                 {item.name}
               </h3>
-              <p className="w-48 overflow-hidden text-ellipsis whitespace-nowrap opacity-80">
+              <p className="w-44 overflow-hidden text-ellipsis whitespace-nowrap opacity-80">
                 {item.artist}
               </p>
-              <p className="w-48 overflow-hidden text-ellipsis whitespace-nowrap text-sm opacity-60">
+              <p className="w-44 overflow-hidden text-ellipsis whitespace-nowrap text-sm opacity-60">
                 {item.album}
               </p>
             </div>
