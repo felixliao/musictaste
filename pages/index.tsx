@@ -5,6 +5,7 @@ import Link from 'next/link'
 
 export default function Home() {
   const session = useSession()
+  console.log(session)
   return (
     <div className="flex min-h-screen flex-col items-center justify-center py-2 px-2">
       <h1 className="text-center text-2xl">Netease Music Taste Calculator</h1>
@@ -32,10 +33,13 @@ export default function Home() {
       {session.status === 'unauthenticated' && (
         <Button
           className="mt-5"
-          text="Login with Spotify"
+          text="Sign In with Spotify"
           onClick={() => signIn('spotify', { callbackUrl: '/start' })}
         />
       )}
+      <Link href="/info">
+        <p className="text-sm absolute bottom-8 opacity-30">FAQs</p>
+      </Link>
     </div>
   )
 }
