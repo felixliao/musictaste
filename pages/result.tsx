@@ -119,7 +119,7 @@ const Result = ({ songList, score, list, range, error }: Props) => {
       {modalVisible && poster && (
         <div className="fixed top-0 left-0 w-screen h-screen bg-black/70 z-10">
           <div className="flex flex-col justify-center items-center max-w-xs absolute m-auto left-0 top-0 right-0 bottom-0 my-auto">
-            <img className="w-full h-auto" src={poster} alt="poster" />
+            <img className="w-11/12 h-auto" src={poster} alt="poster" />
             <p className="text-lg my-3">Long press to download</p>
             <Button text="Close" onClick={() => setModalVisible(false)} />
           </div>
