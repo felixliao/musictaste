@@ -77,7 +77,7 @@ const Start = () => {
       )}
       <Link href={`/result?list=${list}&range=${range}`} passHref>
         <Button
-          className="mt-auto mb-6"
+          className="mt-12 mb-6"
           text="Calculate"
           canLoad
           onClick={() => {
