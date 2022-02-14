@@ -9,6 +9,10 @@ import Button from 'components/button'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { start } from './start'
 import createImage from 'lib/poster'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next'
+import backButton from 'public/back.svg'
+import { useRouter } from 'next/router'
 
 interface Props {
   songList: Song[]
@@ -19,21 +23,16 @@ interface Props {
 }
 
 const Result = ({ songList, score, list, range, error }: Props) => {
+  const router = useRouter()
   const [profile, setProfile] = useState<any>()
-
+  const { t } = useTranslation(['result', 'parameters'])
   const [modalVisible, setModalVisible] = useState(false)
   const [poster, setPoster] = useState<string>()
   const descriptions = useMemo(
     () =>
       list === 'top'
-        ? `Top Songs, ${
-            range === 'short_term'
-              ? 'Last Month'
-              : range === 'medium_term'
-              ? 'Last 6 Months'
-              : 'All'
-          }`
-        : 'Liked Songs',
+        ? `${t('top', { ns: 'parameters' })}, ${t(range, { ns: 'parameters' })}`
+        : t(list, { ns: 'parameters' }),
     [list, range]
   )
   useEffect(() => {
@@ -67,9 +66,7 @@ const Result = ({ songList, score, list, range, error }: Props) => {
   if (error || score === -1) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
-        <h1 className="text-sm text-center w-64 mb-5">
-          Sorry, we have encounter a problem. Please try again later.
-        </h1>
+        <h1 className="text-sm text-center w-64 mb-5">{t('error')}</h1>
         <Link href="/">
           <Button text="Back to Home" />
         </Link>
@@ -79,10 +76,13 @@ const Result = ({ songList, score, list, range, error }: Props) => {
   return (
     <div className="mx-2 mt-4">
       <div className="mb-5">
-        <h1 className="mb-3 text-5xl">Your Results</h1>
-        <p className="mb-2 text-xl opacity-60">Parameters: {descriptions}</p>
+        <h1 className="mb-3 text-5xl">{t('title')}</h1>
+        <p className="mb-2 text-xl opacity-60">
+          {t('parameters')}
+          {descriptions}
+        </p>
         <h2 className="text-4xl">
-          Final Score:{' '}
+          {t('score')}
           <span className="text-spotify-green text-6xl">{score}</span>
           <span className="opacity-40 text-sm">/100</span>
         </h2>
@@ -102,30 +102,50 @@ const Result = ({ songList, score, list, range, error }: Props) => {
             </p>
           </div>
           <div className="ml-auto mr-3 flex flex-col items-end justify-center">
-            <p className="opacity-60">comments</p>
+            <p className="opacity-60">{t('comments')}</p>
             <p className="text-xl">
-              {item.score === -1 ? 'failed' : item.score}
+              {item.score === -1 ? t('fail') : item.score}
             </p>
           </div>
         </div>
       ))}
-      <Link href="/info">
-        <p className="text-sm pl-8 opacity-30 my-12">FAQs</p>
-      </Link>
+      <div className="h-24 relative">
+        <Link href="/info">
+          <p className="absolute h-8 right-8 text-sm text-right cursor-pointer opacity-30 my-auto top-0 bottom-0 w-16">
+            {t('faq')}
+          </p>
+        </Link>
+      </div>
       {!modalVisible && (
         <Button
-          className="fixed w-32 bottom-8 mx-auto left-0 right-0"
-          text="Share"
+          className="fixed w-32 bottom-8 mx-auto left-0 right-0 drop-shadow-lg"
+          text={t('share')}
           onClick={onShare}
           canLoad
+          loadingText={t('loading')}
         />
       )}
+      <button
+        className="fixed bottom-8 rounded-full w-14 bg-spotify-green left-8 h-12 flex justify-center items-center drop-shadow-lg cursor-pointer"
+        onClick={router.back}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="24px"
+          viewBox="0 0 24 24"
+          width="24px"
+          fill="#FFFFFF"
+        >
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+        </svg>
+      </button>
       {modalVisible && poster && (
         <div className="fixed top-0 left-0 w-screen h-screen bg-black/70 z-10">
           <div className="flex flex-col justify-center items-center max-w-xs absolute m-auto left-0 top-0 right-0 bottom-0 my-auto">
             <img className="w-11/12 h-auto" src={poster} alt="poster" />
-            <p className="text-lg my-3">Long press to download</p>
-            <Button text="Close" onClick={() => setModalVisible(false)} />
+            <p className="text-lg my-3">{t('download')}</p>
+            <Button text={t('close')} onClick={() => setModalVisible(false)} />
           </div>
         </div>
       )}
@@ -179,6 +199,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
       score: finalScore,
       list,
       range,
+      ...(await serverSideTranslations(ctx.locale!, ['result', 'parameters'])),
     },
   }
 }

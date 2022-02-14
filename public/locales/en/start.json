@@ -1,0 +1,7 @@
+{
+  "select": "Select the songs you want to analyze",
+  "from": "Songs from...",
+  "timeframe": "Timeframe",
+  "calculate": "Calculate",
+  "loading": "computing..."
+}

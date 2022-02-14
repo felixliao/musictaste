@@ -1,0 +1,14 @@
+{
+  "error": "Sorry, we have encounter a problem. Please try again later.",
+  "back": "Back to Home",
+  "title": "Your Results",
+  "parameters": "Parameters: ",
+  "score": "Final Score: ",
+  "comments": "comments",
+  "fail": "failed",
+  "faq": "FAQs",
+  "share": "Share",
+  "loading": "loading...",
+  "download": "Long press to download",
+  "close": "Close"
+}

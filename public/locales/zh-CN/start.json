@@ -1,0 +1,7 @@
+{
+  "select": "选择你想分析的范围",
+  "from": "歌单",
+  "timeframe": "时间范围",
+  "calculate": "开始计算",
+  "loading": "计算中..."
+}
