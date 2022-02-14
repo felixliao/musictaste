@@ -6,7 +6,7 @@ import { Song } from 'types'
 import getCount from 'lib/netease'
 import Link from 'next/link'
 import Button from 'components/button'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { start } from './start'
 import createImage from 'lib/poster'
 
@@ -20,8 +20,22 @@ interface Props {
 
 const Result = ({ songList, score, list, range, error }: Props) => {
   const [profile, setProfile] = useState<any>()
+
   const [modalVisible, setModalVisible] = useState(false)
   const [poster, setPoster] = useState<string>()
+  const descriptions = useMemo(
+    () =>
+      list === 'top'
+        ? `Top Songs, ${
+            range === 'short_term'
+              ? 'Last Month'
+              : range === 'medium_term'
+              ? 'Last 6 Months'
+              : 'All'
+          }`
+        : 'Liked Songs',
+    [list, range]
+  )
   useEffect(() => {
     window.gtag('event', 'success', {
       list,
@@ -44,6 +58,7 @@ const Result = ({ songList, score, list, range, error }: Props) => {
           _songList: songList,
           user: profile ?? (await loadProfile()),
           score,
+          descriptions,
         })
       )
     setModalVisible(true)
@@ -65,18 +80,7 @@ const Result = ({ songList, score, list, range, error }: Props) => {
     <div className="mx-2 mt-4">
       <div className="mb-5">
         <h1 className="mb-3 text-5xl">Your Results</h1>
-        <p className="mb-2 text-xl opacity-60">
-          Parameters:{' '}
-          {list === 'top'
-            ? `Top Songs, ${
-                range === 'short_term'
-                  ? 'Last Month'
-                  : range === 'medium_term'
-                  ? 'Last 6 Months'
-                  : 'All'
-              }`
-            : 'Liked Songs'}
-        </p>
+        <p className="mb-2 text-xl opacity-60">Parameters: {descriptions}</p>
         <h2 className="text-4xl">
           Final Score:{' '}
           <span className="text-spotify-green text-6xl">{score}</span>

@@ -13,10 +13,12 @@ export default async function createImage({
   _songList,
   user,
   score,
+  descriptions,
 }: {
   _songList: Song[]
   user?: Record<string, any>
   score: number
+  descriptions: string
 }) {
   const [code, avatar, ...songList] = await Promise.all([
     download(qr.src),
@@ -94,6 +96,20 @@ export default async function createImage({
   // title
   ctx.font = '20px sans-serif'
   ctx.fillText('Netease Music Taste Score', 30, 440)
+
+  // list
+  const [list, range] = descriptions.split(', ')
+  ctx.font = '14px sans-serif'
+  ctx.fillStyle = '#444'
+  ctx.textAlign = 'right'
+  if (range) {
+    ctx.fillText(list, 355, 487)
+    ctx.fillText(range, 355, 507)
+  } else {
+    ctx.fillText(list, 355, 507)
+  }
+
+  ctx.textAlign = 'left'
 
   // score
   ctx.font = '60px sans-serif'
