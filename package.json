@@ -7,7 +7,7 @@
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
-    "NeteaseCloudMusicApi": "^4.5.3",
+    "NeteaseCloudMusicApi": "^4.6.7",
     "axios": "^0.25.0",
     "mongodb": "^4.3.1",
     "next": "latest",
